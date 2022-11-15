@@ -16,3 +16,9 @@ def preprocessing():
     [OQ_train, OQ_test] = train_test_split(OQ, test_size=0.1, random_state=12345)
 
     return [[HK_train, HK_test], [MY_train, MY_test], [OQ_train, OQ_test]]
+
+def multi_class_preprocessing():
+    full_data = pd.read_csv("data\letter-recognition.data", header=None)
+    data = full_data.loc[full_data[0].str.fullmatch('[H,K,M,Y,O,Q]'), :]
+    [train, test] = train_test_split(data, test_size=0.1, random_state=12345)
+    return [train, test]
