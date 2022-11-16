@@ -38,13 +38,14 @@ def tune_max_depth(data, list):
         data: the first column is labels, remaining columns are features
         list: list of parameters to be considered
     output:
-        the parameter in the list that gives the best model
+        the cross validation scores
     """
     scores = np.zeros(len(list))
     for i in list:
         model = DecisionTreeClassifier(max_depth=i)
         scores[i] = np.mean(cross_val_score(model, data.loc[:, 1:16], data.loc[:, 0]))
-    return list[np.argmax(scores)]
+    # return list[np.argmax(scores)]
+    return scores
 
 
 def dimensionReduction(data, criterion="gini"):

@@ -49,13 +49,14 @@ def tune_metric(data, list):
         data: the first column is labels, remaining columns are features
         list: int, list of metric to be considered, p=1 is manhattan distance, p=2 is euclidean, for other p, minkowski_distance(l_p) is used
     output:
-        the p-value in the list that gives the best model
+        the cross validation scores
     """
     scores = np.zeros(len(list))
     for i in list:
         model = KNeighborsClassifier(n_neighbors=3, p=i)
         scores[i] = np.mean(cross_val_score(model, data.loc[:, 1:16], data.loc[:, 0]))
-    return list[np.argmax(scores)]
+    # return list[np.argmax(scores)]
+    return scores
 
 
 def dimensionReduction(data, k=3):
