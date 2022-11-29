@@ -13,11 +13,11 @@ def train(data, k, metric=2):
         the knn model trained on data
     """
     knn_model = KNeighborsClassifier(n_neighbors=k, p=metric)
-    knn_model.fit(data.loc[:, 1:16], data.loc[:, 0])
+    knn_model.fit(data.iloc[:, 1:17], data.iloc[:, 0])
     return knn_model
 
 
-def eval(data, model):
+def eval(model, data):
     """
     input:
         data: the first column is labels, remaining columns are features
@@ -25,7 +25,7 @@ def eval(data, model):
     output:
         the score of the model on the testing dataset
     """
-    return model.score(data.loc[:, 1:16], data.loc[:, 0])
+    return model.score(data.iloc[:, 1:17], data.iloc[:, 0])
 
 
 def tune_k(data, list=range(1, 10)):
@@ -36,11 +36,12 @@ def tune_k(data, list=range(1, 10)):
     output:
         the k-value in the list that gives the best model
     """
-    scores = np.zeros(len(list))
+    scores = []
     for i in list:
         model = KNeighborsClassifier(n_neighbors=i)
-        scores[i] = np.mean(cross_val_score(model, data.loc[:, 1:16], data.loc[:, 0]))
-    return list[np.argmax(scores)]
+        scores.append(np.mean(cross_val_score(model, data.loc[:, 1:17], data.loc[:, 0])))
+    # return list[np.argmax(scores)]
+    return scores
 
 
 def tune_metric(data, list):
@@ -51,10 +52,10 @@ def tune_metric(data, list):
     output:
         the cross validation scores
     """
-    scores = np.zeros(len(list))
+    scores = []
     for i in list:
         model = KNeighborsClassifier(n_neighbors=3, p=i)
-        scores[i] = np.mean(cross_val_score(model, data.loc[:, 1:16], data.loc[:, 0]))
+        scores.append(np.mean(cross_val_score(model, data.loc[:, 1:17], data.loc[:, 0])))
     # return list[np.argmax(scores)]
     return scores
 
@@ -69,5 +70,5 @@ def dimensionReduction(data, k=3):
     """
     knn_model = KNeighborsClassifier(n_neighbors=k)
     sfs = SequentialFeatureSelector(knn_model, n_features_to_select=4)
-    sfs.fit(data.loc[:, 1:16], data.loc[:, 0])
+    sfs.fit(data.loc[:, 1:17], data.loc[:, 0])
     return data.loc[:, np.insert(sfs.get_support(), 0, 1)]
